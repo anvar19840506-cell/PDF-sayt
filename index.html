@@ -15,8 +15,8 @@
         label { display: block; font-weight: 600; font-size: 13px; margin: 12px 0 6px; }
         input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 15px; background: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); }
         textarea { height: 150px; resize: vertical; }
-        button { width: 100%; padding: 14px; margin-top: 14px; background: var(--tg-theme-button-color, #0088cc); color: var(--tg-theme-button-text-color, #ffffff); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .btn-tg { background: #28a745; display: none; }
+        button { width: 100%; padding: 14px; margin-top: 16px; background: var(--tg-theme-button-color, #0088cc); color: var(--tg-theme-button-text-color, #ffffff); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
         .tg-link { display: block; text-align: center; margin-top: 16px; color: #0088cc; text-decoration: none; font-size: 14px; font-weight: 500; }
     </style>
 </head>
@@ -31,11 +31,9 @@
         <label>Asosiy matn:</label>
         <textarea id="content" placeholder="PDF ichiga yoziladigan matnni shu yerga kiriting..."></textarea>
 
-        <button id="btnTg" class="btn-tg" onclick="sendToBot()">🤖 Tayyor PDF ni Telegram chatga olish</button>
-        <button onclick="downloadPDF()">📥 Qurilmaga yuklab olish (PDF)</button>
+        <button id="mainBtn" onclick="createPDF()">📥 PDF yaratish va olish</button>
 
         <a href="https://t.me" class="tg-link" target="_blank">🤖 Telegram botimizga o'tish</a>
-
     </div>
 
     <script>
@@ -43,27 +41,16 @@
         if (tg) {
             tg.ready();
             tg.expand();
-            // Agar Telegram ichidan ochilgan bo'lsa, yashil bot tugmasini ko'rsatamiz
-            if (tg.initData && tg.initData.length > 0) {
-                document.getElementById("btnTg").style.display = "block";
-            }
         }
 
-        function sendToBot() {
+        async function createPDF() {
             const title = document.getElementById("title").value.trim();
             const content = document.getElementById("content").value.trim();
-            if (!content) {
-                tg.showAlert("Iltimos, avval matn kiriting!");
-                return;
-            }
-            tg.sendData(JSON.stringify({ title: title, content: content }));
-        }
+            const btn = document.getElementById("mainBtn");
 
-        function downloadPDF() {
-            const title = document.getElementById("title").value.trim();
-            const content = document.getElementById("content").value.trim();
             if (!content) {
-                alert("Iltimos, avval matn kiriting!");
+                if (tg && tg.showAlert) tg.showAlert("Iltimos, avval matn kiriting!");
+                else alert("Iltimos, avval matn kiriting!");
                 return;
             }
 
@@ -76,11 +63,44 @@
                 doc.text(title, 105, y, { align: "center" });
                 y += 14;
             }
-
             doc.setFontSize(12);
             const lines = doc.splitTextToSize(content, 180);
             doc.text(lines, 15, y);
-            doc.save((title || "hujjat") + ".pdf");
+
+            const fileName = (title || "hujjat") + ".pdf";
+
+            // 1. Agar Telegram ichidan ochilgan bo'lsa:
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                btn.disabled = true;
+                btn.innerText = "⏳ PDF chatga yuborilmoqda...";
+
+                try {
+                    const pdfBlob = doc.output("blob");
+                    const formData = new FormData();
+                    formData.append("chat_id", tg.initDataUnsafe.user.id);
+                    formData.append("document", pdfBlob, fileName);
+                    formData.append("caption", "✅ Tayyor PDF hujjatingiz!");
+
+                    const botToken = "9032732859:AAHe-cZ4CBAMkzjEf-PTGN3aDMNCdglrFGg";
+                    const apiUrl = "https://" + "api.telegram.org/bot" + botToken + "/sendDocument";
+
+                    const response = await fetch(apiUrl, { method: "POST", body: formData });
+                    const result = await response.json();
+
+                    if (result.ok) {
+                        tg.close(); // Oynani yopadi va tayyor PDF chatda turadi!
+                    } else {
+                        throw new Error("Yuborishda xato");
+                    }
+                } catch (e) {
+                    btn.disabled = false;
+                    btn.innerText = "📥 PDF yaratish va olish";
+                    tg.showAlert("Xatolik: Avval botga /start bosganingizga ishonch hosil qiling!");
+                }
+            } else {
+                // 2. Oddiy brauzerdan (Chrome/Safari) ochilgan bo'lsa to'g'ridan-to'g'ri yuklaydi:
+                doc.save(fileName);
+            }
         }
     </script>
 </body>
