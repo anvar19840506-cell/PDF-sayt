@@ -6,245 +6,55 @@
     <title>Pro PDF Studio</title>
     <script src="https://telegram.org"></script>
     <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --card-bg: rgba(255, 255, 255, 0.96);
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            color: var(--text-main);
-        }
-
-        .card {
-            background: var(--card-bg);
-            width: 100%;
-            max-width: 480px;
-            padding: 32px 28px;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 26px;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #eff6ff;
-            color: var(--primary);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            padding: 5px 12px;
-            border-radius: 99px;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: #0f172a;
-        }
-
-        .subtitle {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            font-weight: 600;
-            color: #334155;
-            margin-bottom: 8px;
-        }
-
-        .char-count {
-            font-weight: 400;
-            color: var(--text-muted);
-            font-size: 12px;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1.5px solid var(--border-color);
-            border-radius: 14px;
-            font-size: 15px;
-            color: var(--text-main);
-            background: #f8fafc;
-            transition: all 0.2s ease;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-        }
-
-        textarea {
-            height: 150px;
-            resize: vertical;
-            line-height: 1.5;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 16px;
-            margin-top: 6px;
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 14px 24px -5px rgba(37, 99, 235, 0.5);
-        }
-
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
-
-        #status {
-            text-align: center;
-            margin-top: 14px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #059669;
-            min-height: 20px;
-        }
-
-        .footer {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-        }
-
-        .tg-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-
-        .tg-link:hover {
-            color: var(--primary);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .card { background: #ffffff; width: 100%; max-width: 460px; padding: 28px 24px; border-radius: 22px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        h1 { font-size: 22px; text-align: center; color: #0f172a; margin-bottom: 6px; }
+        p.sub { text-align: center; color: #64748b; font-size: 13px; margin-bottom: 20px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px; }
+        input, textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 15px; margin-bottom: 14px; background: #f8fafc; }
+        textarea { height: 140px; resize: vertical; }
+        button { width: 100%; padding: 15px; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; }
+        button:disabled { opacity: 0.6; }
+        #msg { text-align: center; margin-top: 12px; font-size: 14px; font-weight: 600; color: #059669; }
     </style>
 </head>
 <body>
     <div class="card">
-        <div class="header">
-            <span class="badge">PDF Generator v2.0</span>
-            <h1>Pro PDF Studio</h1>
-            <p class="subtitle">Matnlarni soniyalar ichida rasmiy hujjatga aylantiring</p>
-        </div>
+        <h1>📄 Pro PDF Studio</h1>
+        <p class="sub">Matnni kiriting va PDF faylni oling</p>
 
-        <div class="form-group">
-            <label for="title">Hujjat sarlavhasi</label>
-            <input type="text" id="title" placeholder="Masalan: Mustaqil ish yoki Hisobot">
-        </div>
+        <label>Hujjat sarlavhasi</label>
+        <input type="text" id="title" placeholder="Masalan: Hisobot">
 
-        <div class="form-group">
-            <label for="content">
-                <span>Asosiy matn</span>
-                <span class="char-count" id="counter">0 belgi</span>
-            </label>
-            <textarea id="content" placeholder="Hujjat matnini shu yerga kiriting..." oninput="updateCount()"></textarea>
-        </div>
+        <label>Asosiy matn</label>
+        <textarea id="content" placeholder="Matnni shu yerga kiriting..."></textarea>
 
-        <button class="btn-primary" onclick="yuborish()">PDF yaratish va yuklab olish</button>
-        <div id="status"></div>
-
-        <div class="footer">
-            <a href="https://t.me" class="tg-link" target="_blank">
-                Telegram botimizga o'tish &rarr;
-            </a>
-        </div>
+        <button id="btn" onclick="yaratish()">📥 PDF yaratish va olish</button>
+        <div id="msg"></div>
     </div>
 
     <script>
+        // SHU YERGA @BotFather DAN OLGAN OXIRGI TOKENINGIZNI YOZING:
+        const TOKEN = "SIZNING_YANGI_TOKENINGIZ";
+
         const tg = window.Telegram ? window.Telegram.WebApp : null;
-        if (tg) {
-            tg.ready();
-            tg.expand();
-        }
+        if (tg) { tg.ready(); tg.expand(); }
 
-        function updateCount() {
-            const len = document.getElementById("content").value.length;
-            document.getElementById("counter").innerText = len + " belgi";
-        }
-
-        function yuborish() {
+        async function yaratish() {
             const title = document.getElementById("title").value.trim();
             const content = document.getElementById("content").value.trim();
-            const status = document.getElementById("status");
+            const btn = document.getElementById("btn");
+            const msg = document.getElementById("msg");
 
-            if (!content) {
-                if (tg && tg.showAlert) tg.showAlert("Iltimos, avval matn kiriting!");
-                else alert("Iltimos, avval matn kiriting!");
-                return;
-            }
+            if (!content) { alert("Matn kiriting!"); return; }
 
-            if (tg && typeof tg.sendData === "function" && tg.initData !== "") {
-                status.innerText = "Tayyorlanmoqda...";
-                tg.sendData(JSON.stringify({ title: title, content: content }));
-                return;
-            }
-
+            // Sof PDF fayl yaratish (tashqi kutubxonasiz)
             const matn = (title ? title + "\n\n" : "") + content;
-            const tozaMatn = matn.replace(/[^\x20-\x7E\n]/g, "?").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
-            const qatorlar = tozaMatn.split("\n").map((line, i) => `1 0 0 1 50 ${750 - i * 18} Tm (${line}) Tj`).join("\n");
+            const toza = matn.replace(/[^\x20-\x7E\n]/g, "?").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+            const qatorlar = toza.split("\n").map((l, i) => `1 0 0 1 50 ${750 - i * 18} Tm (${l}) Tj`).join("\n");
             
-            const pdfContent = `%PDF-1.4
+            const pdf = `%PDF-1.4
 1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
 2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
 3 0 obj << /Type /Page /Parent 2 0 R /Resources << /Font << /F1 4 0 R >> >> /MediaBox [0 0 612 792] /Contents 5 0 R >> endobj
@@ -267,12 +77,39 @@ startxref
 ${380 + qatorlar.length}
 %%EOF`;
 
-            const blob = new Blob([pdfContent], { type: "application/pdf" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = (title || "hujjat") + ".pdf";
-            link.click();
-            status.innerText = "PDF muvaffaqiyatli yuklab olindi!";
+            const blob = new Blob([pdf], { type: "application/pdf" });
+            const fileName = (title || "hujjat") + ".pdf";
+
+            // 1. Telegram ichida ochilgan bo'lsa to'g'ridan-to'g'ri chatga yuboradi:
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                btn.disabled = true;
+                btn.innerText = "⏳ Chatga yuborilmoqda...";
+
+                const fd = new FormData();
+                fd.append("chat_id", tg.initDataUnsafe.user.id);
+                fd.append("document", blob, fileName);
+
+                const url = "https://" + "api.telegram.org/bot" + TOKEN + "/sendDocument";
+                const res = await fetch(url, { method: "POST", body: fd });
+                const data = await res.json();
+
+                if (data.ok) {
+                    tg.close();
+                } else {
+                    btn.disabled = false;
+                    btn.innerText = "📥 PDF yaratish va olish";
+                    msg.style.color = "red";
+                    msg.innerText = "Xato: Token noto'g'ri yoki botga /start bosilmagan!";
+                }
+                return;
+            }
+
+            // 2. Oddiy brauzerda yuklab oladi:
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            a.click();
+            msg.innerText = "✅ PDF yuklab olindi!";
         }
     </script>
 </body>
