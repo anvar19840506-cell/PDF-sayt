@@ -6,31 +6,209 @@
     <title>Pro PDF Studio</title>
     <script src="https://telegram.org"></script>
     <style>
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background: var(--tg-theme-bg-color, #f0f2f5); color: var(--tg-theme-text-color, #1a1a1a); margin: 0; padding: 16px; display: flex; justify-content: center; }
-        .container { background: var(--tg-theme-secondary-bg-color, #fff); width: 100%; max-width: 500px; padding: 22px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-        h1 { font-size: 22px; text-align: center; margin: 0 0 6px; }
-        p.sub { text-align: center; opacity: 0.75; font-size: 14px; margin: 0 0 20px; }
-        label { display: block; font-weight: 600; font-size: 13px; margin: 12px 0 6px; }
-        input, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 15px; background: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); }
-        textarea { height: 150px; resize: vertical; }
-        button { width: 100%; padding: 14px; margin-top: 16px; background: #0088cc; color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        #status { text-align: center; margin-top: 12px; font-size: 14px; color: #28a745; font-weight: bold; }
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        .card {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 480px;
+            padding: 32px 28px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 99px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #0f172a;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .char-count {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            font-size: 15px;
+            color: var(--text-main);
+            background: #f8fafc;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            margin-top: 6px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 24px -5px rgba(37, 99, 235, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        #status {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #059669;
+            min-height: 20px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .tg-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .tg-link:hover {
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📄 Pro PDF Studio</h1>
-        <p class="sub">Matnni kiriting va PDF faylni oling</p>
+    <div class="card">
+        <div class="header">
+            <span class="badge">PDF Generator v2.0</span>
+            <h1>Pro PDF Studio</h1>
+            <p class="subtitle">Matnlarni soniyalar ichida rasmiy hujjatga aylantiring</p>
+        </div>
 
-        <label>Hujjat sarlavhasi:</label>
-        <input type="text" id="title" placeholder="Masalan: Hisobot">
+        <div class="form-group">
+            <label for="title">Hujjat sarlavhasi</label>
+            <input type="text" id="title" placeholder="Masalan: Mustaqil ish yoki Hisobot">
+        </div>
 
-        <label>Asosiy matn:</label>
-        <textarea id="content" placeholder="Matnni shu yerga yozing..."></textarea>
+        <div class="form-group">
+            <label for="content">
+                <span>Asosiy matn</span>
+                <span class="char-count" id="counter">0 belgi</span>
+            </label>
+            <textarea id="content" placeholder="Hujjat matnini shu yerga kiriting..." oninput="updateCount()"></textarea>
+        </div>
 
-        <button onclick="yuborish()">📥 PDF yaratish va olish</button>
+        <button class="btn-primary" onclick="yuborish()">PDF yaratish va yuklab olish</button>
         <div id="status"></div>
+
+        <div class="footer">
+            <a href="https://t.me" class="tg-link" target="_blank">
+                Telegram botimizga o'tish &rarr;
+            </a>
+        </div>
     </div>
 
     <script>
@@ -40,24 +218,28 @@
             tg.expand();
         }
 
+        function updateCount() {
+            const len = document.getElementById("content").value.length;
+            document.getElementById("counter").innerText = len + " belgi";
+        }
+
         function yuborish() {
             const title = document.getElementById("title").value.trim();
             const content = document.getElementById("content").value.trim();
             const status = document.getElementById("status");
 
             if (!content) {
-                alert("Iltimos, avval matn kiriting!");
+                if (tg && tg.showAlert) tg.showAlert("Iltimos, avval matn kiriting!");
+                else alert("Iltimos, avval matn kiriting!");
                 return;
             }
 
-            // 1. Agar Telegram ichidan ochilgan bo'lsa:
             if (tg && typeof tg.sendData === "function" && tg.initData !== "") {
-                status.innerText = "⏳ PDF tayyorlanmoqda...";
+                status.innerText = "Tayyorlanmoqda...";
                 tg.sendData(JSON.stringify({ title: title, content: content }));
                 return;
             }
 
-            // 2. Oddiy brauzer yoki Menu tugmasidan ochilganda ham o'zi sof PDF yasab yuklaydi (hech qanday kutubxonasiz!):
             const matn = (title ? title + "\n\n" : "") + content;
             const tozaMatn = matn.replace(/[^\x20-\x7E\n]/g, "?").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
             const qatorlar = tozaMatn.split("\n").map((line, i) => `1 0 0 1 50 ${750 - i * 18} Tm (${line}) Tj`).join("\n");
@@ -90,7 +272,7 @@ ${380 + qatorlar.length}
             link.href = URL.createObjectURL(blob);
             link.download = (title || "hujjat") + ".pdf";
             link.click();
-            status.innerText = "✅ PDF yuklab olindi!";
+            status.innerText = "PDF muvaffaqiyatli yuklab olindi!";
         }
     </script>
 </body>
