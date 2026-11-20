@@ -8,31 +8,31 @@
     <script src="https://cloudflare.com"></script>
     <style>
         * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        body { background: var(--tg-theme-bg-color, #f0f2f5); color: var(--tg-theme-text-color, #1a1a1a); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { background: var(--tg-theme-secondary-bg-color, #fff); width: 100%; max-width: 500px; padding: 25px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-        h1 { font-size: 22px; text-align: center; margin-bottom: 5px; }
-        p.sub { text-align: center; opacity: 0.7; font-size: 14px; margin-bottom: 20px; }
+        body { background: var(--tg-theme-bg-color, #f0f2f5); color: var(--tg-theme-text-color, #1a1a1a); margin: 0; padding: 16px; display: flex; justify-content: center; }
+        .container { background: var(--tg-theme-secondary-bg-color, #ffffff); width: 100%; max-width: 500px; padding: 22px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+        h1 { font-size: 22px; text-align: center; margin: 0 0 6px; }
+        p.sub { text-align: center; opacity: 0.75; font-size: 14px; margin: 0 0 20px; }
         label { display: block; font-weight: 600; font-size: 13px; margin: 12px 0 6px; }
         input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 15px; background: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); }
         textarea { height: 150px; resize: vertical; }
-        button { width: 100%; padding: 14px; margin-top: 15px; background: var(--tg-theme-button-color, #0088cc); color: var(--tg-theme-button-text-color, #fff); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .btn-bot { background: #28a745; margin-top: 10px; }
-        .tg-link { display: block; text-align: center; margin-top: 15px; color: #0088cc; text-decoration: none; font-size: 14px; }
+        button { width: 100%; padding: 14px; margin-top: 14px; background: var(--tg-theme-button-color, #0088cc); color: var(--tg-theme-button-text-color, #ffffff); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .btn-tg { background: #28a745; display: none; }
+        .tg-link { display: block; text-align: center; margin-top: 16px; color: #0088cc; text-decoration: none; font-size: 14px; font-weight: 500; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📄 Pro PDF Studio</h1>
-        <p class="sub">Matnlarni soniyalar ichida professional PDF hujjatga aylantiring</p>
+        <p class="sub">Telefon va kompyuterda soniyalar ichida PDF yarating</p>
 
         <label>Hujjat sarlavhasi:</label>
-        <input type="text" id="title" placeholder="Masalan: Hisobot yoki Rezyume">
+        <input type="text" id="title" placeholder="Masalan: Mustaqil ish yoki Hisobot">
 
         <label>Asosiy matn:</label>
-        <textarea id="content" placeholder="Hujjat matnini shu yerga yozing..."></textarea>
+        <textarea id="content" placeholder="PDF ichiga yoziladigan matnni shu yerga kiriting..."></textarea>
 
-        <button onclick="downloadDirectPDF()">📥 PDF faylni yuklab olish</button>
-        <button id="sendBotBtn" class="btn-bot" style="display:none;" onclick="sendToBot()">🤖 PDF ni Telegram chatga yuborish</button>
+        <button id="btnTg" class="btn-tg" onclick="sendToBot()">🤖 Tayyor PDF ni Telegram chatga olish</button>
+        <button onclick="downloadPDF()">📥 Qurilmaga yuklab olish (PDF)</button>
 
         <a href="https://t.me" class="tg-link" target="_blank">🤖 Telegram botimizga o'tish</a>
     </div>
@@ -42,15 +42,29 @@
         if (tg) {
             tg.ready();
             tg.expand();
-            if (tg.initData !== "") {
-                document.getElementById("sendBotBtn").style.display = "block";
+            // Agar Telegram ichidan ochilgan bo'lsa, yashil bot tugmasini ko'rsatamiz
+            if (tg.initData && tg.initData.length > 0) {
+                document.getElementById("btnTg").style.display = "block";
             }
         }
 
-        function downloadDirectPDF() {
+        function sendToBot() {
             const title = document.getElementById("title").value.trim();
             const content = document.getElementById("content").value.trim();
-            if (!content) { alert("Iltimos, matn kiriting!"); return; }
+            if (!content) {
+                tg.showAlert("Iltimos, avval matn kiriting!");
+                return;
+            }
+            tg.sendData(JSON.stringify({ title: title, content: content }));
+        }
+
+        function downloadPDF() {
+            const title = document.getElementById("title").value.trim();
+            const content = document.getElementById("content").value.trim();
+            if (!content) {
+                alert("Iltimos, avval matn kiriting!");
+                return;
+            }
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -59,19 +73,13 @@
             if (title) {
                 doc.setFontSize(18);
                 doc.text(title, 105, y, { align: "center" });
-                y += 15;
+                y += 14;
             }
+
             doc.setFontSize(12);
             const lines = doc.splitTextToSize(content, 180);
             doc.text(lines, 15, y);
             doc.save((title || "hujjat") + ".pdf");
-        }
-
-        function sendToBot() {
-            const title = document.getElementById("title").value.trim();
-            const content = document.getElementById("content").value.trim();
-            if (!content) { tg.showAlert("Iltimos, matn kiriting!"); return; }
-            tg.sendData(JSON.stringify({ title: title, content: content }));
         }
     </script>
 </body>
